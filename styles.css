@@ -1,0 +1,173 @@
+/* =========================================
+   ROOT VARIABLES
+   ========================================= */
+   
+:root {
+    --grass: #0c3324;
+    --grass-deep: #082418;
+    --grass-lite: #14503a;
+    --chalk: #f2efe3;
+    --chalk-dim: #a9bdb2;
+    --lamp: #ffc83d;
+    --err: #ff9d8a;
+    --font: "Poppins", "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+
+/* =========================================
+   BODY AND PAGE LAYOUT
+   ========================================= */
+
+body {
+    margin: 0; min-height: 100vh; padding: 28px 24px 80px;
+    color: var(--chalk); font-family: var(--font); font-size: 1.02rem; line-height: 1.5;
+    background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.028) 0 90px, transparent 90px 180px),
+        radial-gradient(ellipse 90% 60% at 50% -10%, var(--grass-lite), transparent 70%),
+        var(--grass);
+    background-attachment: fixed;
+}
+
+
+/* layered baseball-field-inspired background */
+.app { max-width: 1040px; margin: 0 auto; }
+svg.i { width: 1.15em; height: 1.15em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+button { cursor: pointer; font-family: var(--font); }
+button:focus-visible, select:focus-visible { outline: 3px solid var(--lamp); outline-offset: 3px; }
+
+/* =========================================
+   TOP NAVIGATION BAR
+   ========================================= */
+
+.bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 56px; }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-stretch: 120%; letter-spacing: -.01em; }
+.brand svg { width: 34px; height: 34px; color: var(--lamp); stroke-width: 1.5; }
+.bar p { margin: 0; color: var(--chalk-dim); font-size: .92rem; }
+
+/* =========================================
+   DATE SELECTION SECTION
+   ========================================= */
+
+.hero { position: relative; margin-bottom: 64px; }
+.hero-label { color: var(--chalk-dim); font-size: .95rem; margin-bottom: 14px; }
+.date-row { position: relative; display: flex; align-items: flex-end; gap: clamp(8px, 2vw, 22px); }
+.pick { flex: 1 1 0; min-width: 0; }
+.pick:first-child { flex: 1.45 1 0; }
+.pick label { display: block; margin-bottom: 4px; color: var(--chalk-dim); font-size: .85rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.slash { padding-bottom: 6px; color: #4e7466; font: 200 clamp(2.4rem, 8vw, 5.5rem)/1 var(--font); font-stretch: 62%; }
+.select-wrap { position: relative; border-bottom: 3px solid var(--chalk); transition: border-color .2s; }
+.select-wrap:focus-within, .select-wrap:hover { border-bottom-color: var(--lamp); }
+.select-wrap::after {
+    content: ""; position: absolute; right: 4px; top: 50%; width: 12px; height: 12px;
+    border-right: 2.5px solid var(--lamp); border-bottom: 2.5px solid var(--lamp);
+    transform: translateY(-70%) rotate(45deg); pointer-events: none; transition: transform .2s;
+}
+.select-wrap.open::after { transform: translateY(-20%) rotate(225deg); }
+.select-wrap.open { border-bottom-color: var(--lamp); }
+
+
+/* =========================================
+   CUSTOM DROPDOWN BUTTONS
+   ========================================= */
+
+.dd-btn {
+    display: block; width: 100%; padding: 0 28px 0 0; margin: 0; text-align: left;
+    font: 200 clamp(2.4rem, 9vw, 6rem)/1.1 var(--font); font-stretch: 62%;
+    letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+    color: var(--chalk); background: transparent; border: none;
+}
+.dd-panel {
+    position: absolute; z-index: 30; max-width: 100%; padding: 14px;
+    width: calc(var(--cols) * var(--cell) + 28px);
+    display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 4px;
+    background: var(--chalk); color: var(--grass-deep); border-radius: 20px;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, .55);
+    animation: pop .16s ease-out;
+}
+.dd-panel[hidden] { display: none; }
+@keyframes pop { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+.dd-opt {
+    display: grid; place-items: center; align-content: center; height: var(--h); padding: 0;
+    font: 600 1.05rem var(--font); font-variant-numeric: tabular-nums;
+    color: var(--grass-deep); background: transparent; border: none; border-radius: 14px;
+    transition: background .12s, color .12s;
+}
+.dd-opt .sub { display: block; font-size: .68rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #667a70; }
+.dd-opt:hover { background: #ddd9c6; }
+.dd-opt.selected { background: var(--grass); color: var(--lamp); }
+.dd-opt.selected .sub { color: var(--chalk-dim); }
+.dd-opt:focus-visible { outline: 3px solid var(--grass); outline-offset: -3px; }
+.dd-opt.selected:focus-visible { outline-color: var(--lamp); }
+.select-wrap select {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0;
+    opacity: 0; pointer-events: none; border: none; appearance: none; -webkit-appearance: none;
+}
+.date-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 22px; }
+#dateFeedback { min-height: 1.6em; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+#dateFeedback.ok { color: var(--lamp); }
+#dateFeedback.bad { color: var(--err); }
+#statusMessage { min-height: 1.5em; margin-top: 10px; color: var(--err); font-weight: 500; }
+
+/* =========================================
+   BUTTON STYLING
+   ========================================= */
+
+.btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
+    font: 600 .95rem var(--font); color: var(--chalk); background: transparent;
+    border: 1.5px solid rgba(242, 239, 227, .5); border-radius: 99px;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.btn:hover:not(:disabled) { background: var(--chalk); color: var(--grass-deep); border-color: var(--chalk); }
+.btn:disabled { opacity: .35; cursor: default; }
+.btn.primary { background: var(--lamp); color: var(--grass-deep); border-color: var(--lamp); padding: 14px 24px; font-size: 1rem; font-weight: 700; }
+.btn.primary:hover { background: #ffd966; border-color: #ffd966; }
+
+/* matchup: away on top, home below, a chalk-drawn diamond between */
+.game { margin-bottom: 64px; }
+.matchup { position: relative; padding: 30px 0 8px; border-top: 1px solid rgba(242, 239, 227, .25); overflow: hidden; }
+.matchup::after {
+    content: ""; position: absolute; right: -60px; top: 50%; width: 300px; height: 300px;
+    transform: translateY(-50%) rotate(45deg); border: 2px solid rgba(242, 239, 227, .1); pointer-events: none;
+}
+.role { display: flex; align-items: center; gap: 8px; color: var(--chalk-dim); font-size: .95rem; }
+.display-box { position: relative; z-index: 1; font-weight: 900; font-stretch: 112%; font-size: clamp(2.1rem, 8vw, 5.4rem); line-height: .98; letter-spacing: -.035em; min-height: 1em; margin: 4px 0 22px; overflow-wrap: anywhere; }
+#awayTeam { color: transparent; -webkit-text-stroke: 1.6px var(--chalk); }
+#homeTeam { color: var(--lamp); }
+.display-box:empty::before { content: "Pick a date to see the matchup"; color: #4e7466; -webkit-text-stroke: 0; font-weight: 200; font-stretch: 62%; }
+.display-box.swap { animation: swap .35s ease-out; }
+@keyframes swap { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+.game-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding-top: 18px; border-top: 1px solid rgba(242, 239, 227, .25); }
+.count { color: var(--chalk-dim); font-weight: 500; font-variant-numeric: tabular-nums; }
+.pair { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* =========================================
+   HIGHLIGHT REEL SECTION
+   ========================================= */
+
+   
+.reel { background: var(--grass-deep); border: 1px solid rgba(242, 239, 227, .14); border-radius: 28px; padding: clamp(24px, 5vw, 52px); box-shadow: 0 30px 60px rgba(0, 0, 0, .3); }
+.reel h2 { margin: 0 0 18px; display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: 500; color: var(--chalk-dim); }
+.reel-name { min-height: 3.9em; margin-bottom: 26px; font-weight: 700; font-stretch: 94%; font-size: clamp(1.5rem, 4.4vw, 2.7rem); line-height: 1.14; letter-spacing: -.02em; }
+.reel-name:empty::before { content: "Load a game to see its highlights."; color: #4e7466; font-weight: 200; }
+.progress { display: flex; gap: 4px; height: 6px; margin-bottom: 26px; }
+.progress span { flex: 1; min-width: 2px; border-radius: 3px; background: rgba(242, 239, 227, .16); transition: background .2s; }
+.progress span.seen { background: rgba(255, 200, 61, .45); }
+.progress span.now { background: var(--lamp); }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.controls .count { margin-left: auto; }
+.btn.play { background: var(--lamp); color: var(--grass-deep); border-color: var(--lamp); padding: 12px 22px 12px 12px; font-size: 1rem; font-weight: 700; }
+.btn.play:hover { background: #ffd966; border-color: #ffd966; }
+.btn.play .disc { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--grass-deep); color: var(--lamp); }
+.btn.play .disc svg { fill: currentColor; stroke: none; width: 14px; height: 14px; margin-left: 2px; }
+
+@media (max-width: 560px) {
+    body { padding: 20px 16px 56px; }
+    .bar { margin-bottom: 36px; }
+    .bar p { display: none; }
+    .pick label { font-size: .7rem; }
+    .select-wrap::after { width: 8px; height: 8px; right: 2px; }
+    .select-wrap select { padding-right: 16px; }
+    .controls .count { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .display-box.swap, .dd-panel { animation: none; } }
